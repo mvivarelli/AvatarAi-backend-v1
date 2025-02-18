@@ -1,0 +1,12 @@
+# copy webrtc directory then 
+
+cd webrtc
+
+conda create -n webrtc
+
+conda activate webrtc
+
+pip install -r requirements.txt
+
+
+

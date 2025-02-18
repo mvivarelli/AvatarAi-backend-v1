@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebRTC demo</title>
+    <style>
+      button {
+        padding: 8px 16px;
+      }
+
+      pre {
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
+      video {
+        width: 100%;
+      }
+
+      .option {
+        margin-bottom: 8px;
+      }
+
+      #media {
+        max-width: 480px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="media" style="display: block">
+      <video id="video" autoplay="true" playsinline="true"></video>
+    </div>
+
+    <script src="client2.js"></script>
+    
+    <script>
+      window.onload = function() {
+        start();
+      };
+    </script>
+  </body>
+</html>

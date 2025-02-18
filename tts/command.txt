@@ -1,0 +1,14 @@
+    # copy tts directory then 
+
+cd tts
+
+conda create -n tts python=3.11
+
+conda activate tts
+
+pip install coqui-tts
+pip install flask
+pip install flasgger
+
+
+
