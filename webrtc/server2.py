@@ -7,7 +7,7 @@ import uuid
 import cv2
 from aiohttp import web
 from av import VideoFrame
-from aiortc import MediaStreamTrack, RTCPeerConnection, RTCSessionDescription
+from aiortc import MediaStreamTrack, RTCPeerConnection, RTCSessionDescription, RTCIceServer, RTCConfiguration
 from aiortc.contrib.media import MediaPlayer
 
 ROOT = os.path.dirname(__file__)
@@ -85,13 +85,25 @@ async def offer(request):
     except (json.JSONDecodeError, KeyError):
         return web.Response(status=400, text="Invalid JSON payload")
 
-    pc = RTCPeerConnection()  
+    ice_servers = [
+        RTCIceServer(urls="stun:stun.relay.metered.ca:80"),
+        RTCIceServer(urls="turn:global.relay.metered.ca:80", username="6c82d60fa1c26ed4b63f8c67", credential="14Bn1nyBcAQyDehx"),
+        RTCIceServer(urls="turn:global.relay.metered.ca:80?transport=tcp", username="6c82d60fa1c26ed4b63f8c67", credential="14Bn1nyBcAQyDehx"),
+        RTCIceServer(urls="turn:global.relay.metered.ca:443", username="6c82d60fa1c26ed4b63f8c67", credential="14Bn1nyBcAQyDehx"),
+        RTCIceServer(urls="turns:global.relay.metered.ca:443?transport=tcp", username="6c82d60fa1c26ed4b63f8c67", credential="14Bn1nyBcAQyDehx")
+    ]
+    ice_transport_policy = 'all'
+    
+    # pc = RTCPeerConnection(iceServers=ice_servers, iceTransportPolicy=ice_transport_policy)
+    pc = RTCPeerConnection(configuration=RTCConfiguration(iceServers=ice_servers))
+    # pc = RTCPeerConnection()
     
     pc_id = f"PeerConnection({uuid.uuid4()})"
     pcs.add(pc)
     logger.info("Created %s for %s", pc_id, request.remote)
 
     player = MediaPlayer(os.path.join(ROOT, "ok-low.mp4"))
+    # player = MediaPlayer(os.path.join(ROOT, "../SadTalker/output.mp4"))
     pc.addTrack(VideoTransformTrack(player.video, transform))
     pc.addTrack(player.audio)
 
@@ -122,4 +134,4 @@ if __name__ == "__main__":
         web.get("/client2.js", javascript),
         web.post("/offer", offer),
     ])
-    web.run_app(app, host="0.0.0.0", port=8080)
+    web.run_app(app, host="0.0.0.0", port=5020)

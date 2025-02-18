@@ -7,8 +7,7 @@ import uuid
 import cv2
 from aiohttp import web
 from av import VideoFrame
-
-from aiortc import MediaStreamTrack, RTCPeerConnection, RTCSessionDescription
+from aiortc import MediaStreamTrack, RTCPeerConnection, RTCSessionDescription, RTCIceServer, RTCConfiguration
 from aiortc.contrib.media import MediaPlayer
 
 ROOT = os.path.dirname(__file__)
@@ -101,7 +100,18 @@ async def offer(request):
     params = await request.json()
     offer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
 
-    pc = RTCPeerConnection()
+    ice_servers = [
+        RTCIceServer(urls="stun:stun.relay.metered.ca:80"),
+        RTCIceServer(urls="turn:global.relay.metered.ca:80", username="6c82d60fa1c26ed4b63f8c67", credential="14Bn1nyBcAQyDehx"),
+        RTCIceServer(urls="turn:global.relay.metered.ca:80?transport=tcp", username="6c82d60fa1c26ed4b63f8c67", credential="14Bn1nyBcAQyDehx"),
+        RTCIceServer(urls="turn:global.relay.metered.ca:443", username="6c82d60fa1c26ed4b63f8c67", credential="14Bn1nyBcAQyDehx"),
+        RTCIceServer(urls="turns:global.relay.metered.ca:443?transport=tcp", username="6c82d60fa1c26ed4b63f8c67", credential="14Bn1nyBcAQyDehx")
+    ]
+    ice_transport_policy = 'all'
+    
+    # pc = RTCPeerConnection(iceServers=ice_servers, iceTransportPolicy=ice_transport_policy)
+    pc = RTCPeerConnection(configuration=RTCConfiguration(iceServers=ice_servers))
+    # pc = RTCPeerConnection()
     pc_id = "PeerConnection(%s)" % uuid.uuid4()
     pcs.add(pc)
 
@@ -109,7 +119,9 @@ async def offer(request):
         logger.info(pc_id + " " + msg, *args)
 
     log_info("Created for %s", request.remote)
+    
     player = MediaPlayer(os.path.join(ROOT, "ok-low.mp4"))
+    # player = MediaPlayer(os.path.join(ROOT, "../SadTalker/output.mp4"))
 
     # Add video track
     pc.addTrack(VideoTransformTrack(player.video, transform=params["video_transform"]))
@@ -160,4 +172,4 @@ if __name__ == "__main__":
     app.router.add_get("/", index)
     app.router.add_get("/client.js", javascript)
     app.router.add_post("/offer", offer)
-    web.run_app(app, access_log=None, host="0.0.0.0", port=8080, ssl_context=None)
+    web.run_app(app, access_log=None, host="0.0.0.0", port=5020, ssl_context=None)

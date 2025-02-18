@@ -25,8 +25,9 @@ function negotiate() {
         return fetch('/offer', {
             body: JSON.stringify({
                 sdp: offer.sdp,
-                type: offer.type
-            }),
+                type: offer.type,
+                video_transform: "No transform"
+             }),
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -45,6 +46,8 @@ function start() {
     var config = {
         sdpSemantics: 'unified-plan'
     };
+
+    config.iceServers = [{ urls: ['stun:stun.relay.metered.ca:80'] }];
 
     pc = new RTCPeerConnection(config);
 
