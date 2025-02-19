@@ -88,7 +88,7 @@ def main(args):
                                 enhancer=args.enhancer, background_enhancer=args.background_enhancer, preprocess=args.preprocess, img_size=args.size)
     
     # shutil.move(result, save_dir+'.mp4')
-    shutil.move(result, 'output.mp4')
+    shutil.move(result, './output.mp4')
     print('The generated video is named:', save_dir+'.mp4')
 
     if not args.verbose:

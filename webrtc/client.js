@@ -48,7 +48,9 @@ function start() {
     };
 
     if (document.getElementById('use-stun').checked) {
-        config.iceServers = [{ urls: ['stun:stun.relay.metered.ca:80'] }];
+        //config.iceServers = [{ urls: ['stun:stun.relay.metered.ca:80'] }];
+        config.iceServers = [{ urls: ['stun:stun.1und1.de:3478'] }];
+        //config.iceServers = [{ urls: ['stun:stun.1und1.de:3478', 'stun:stun.relay.metered.ca:80'] }];
     }
 
     pc = new RTCPeerConnection(config);

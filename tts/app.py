@@ -29,7 +29,7 @@ def ttstofile():
             text:
               type: string
               description: The text to convert to speech
-              example: "Hello, how are you?"
+              example: "ciao, come stai? sono la tua infermierina hot e sto arrivando"
     responses:
       200:
         description: ttstofile successfully executed

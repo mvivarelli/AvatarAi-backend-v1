@@ -19,8 +19,8 @@ def inference():
     # text = request.args.get('text')
 
     args_dict = {
-        "driven_audio": "./examples/driven_audio/sarah-ita.wav",
-        "source_image": "./examples/source_image/Young-Nurse-big.png",
+        "driven_audio": "../tts/output.wav",
+        "source_image": "./Young-Nurse-big.png",
         "ref_eyeblink": None,
         "ref_pose": None,
         "checkpoint_dir": "./checkpoints",

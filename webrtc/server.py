@@ -87,12 +87,12 @@ class VideoTransformTrack(MediaStreamTrack):
 
 
 async def index(request):
-    content = open(os.path.join(ROOT, "index.html"), "r").read()
+    content = open(os.path.join(ROOT, "index2.html"), "r").read()
     return web.Response(content_type="text/html", text=content)
 
 
 async def javascript(request):
-    content = open(os.path.join(ROOT, "client.js"), "r").read()
+    content = open(os.path.join(ROOT, "client2.js"), "r").read()
     return web.Response(content_type="application/javascript", text=content)
 
 
@@ -101,7 +101,8 @@ async def offer(request):
     offer = RTCSessionDescription(sdp=params["sdp"], type=params["type"])
 
     ice_servers = [
-        RTCIceServer(urls="stun:stun.relay.metered.ca:80"),
+        RTCIceServer(urls="stun:stun.1und1.de:3478"),
+        # RTCIceServer(urls="stun:stun.relay.metered.ca:80"),
         RTCIceServer(urls="turn:global.relay.metered.ca:80", username="6c82d60fa1c26ed4b63f8c67", credential="14Bn1nyBcAQyDehx"),
         RTCIceServer(urls="turn:global.relay.metered.ca:80?transport=tcp", username="6c82d60fa1c26ed4b63f8c67", credential="14Bn1nyBcAQyDehx"),
         RTCIceServer(urls="turn:global.relay.metered.ca:443", username="6c82d60fa1c26ed4b63f8c67", credential="14Bn1nyBcAQyDehx"),
@@ -120,8 +121,8 @@ async def offer(request):
 
     log_info("Created for %s", request.remote)
     
-    player = MediaPlayer(os.path.join(ROOT, "ok-low.mp4"))
-    # player = MediaPlayer(os.path.join(ROOT, "../SadTalker/output.mp4"))
+    # player = MediaPlayer(os.path.join(ROOT, "ok-low.mp4"))
+    player = MediaPlayer(os.path.join(ROOT, "../SadTalker/output.mp4"))
 
     # Add video track
     pc.addTrack(VideoTransformTrack(player.video, transform=params["video_transform"]))
@@ -170,6 +171,6 @@ if __name__ == "__main__":
     app = web.Application()
     app.on_shutdown.append(on_shutdown)
     app.router.add_get("/", index)
-    app.router.add_get("/client.js", javascript)
+    app.router.add_get("/client2.js", javascript)
     app.router.add_post("/offer", offer)
     web.run_app(app, access_log=None, host="0.0.0.0", port=5020, ssl_context=None)
